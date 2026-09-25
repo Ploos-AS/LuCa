@@ -1,0 +1,8 @@
+server=irc.libera.chat
+port=6667
+nick=LuCa
+user=luca
+realname=LuCa IRC bot
+channel=#luca
+script=scripts/ping.lua
+reconnect_seconds=5

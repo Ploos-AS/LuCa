@@ -9,4 +9,5 @@ script=scripts/ping.lua
 sasl=false
 # sasl_user=account
 # sasl_password=secret
+pbmp_socket=/tmp/luca.pbmp.sock
 reconnect_seconds=5

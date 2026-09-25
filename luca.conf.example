@@ -1,8 +1,12 @@
 server=irc.libera.chat
-port=6667
+port=6697
+tls=true
 nick=LuCa
 user=luca
 realname=LuCa IRC bot
 channel=#luca
 script=scripts/ping.lua
+sasl=false
+# sasl_user=account
+# sasl_password=secret
 reconnect_seconds=5

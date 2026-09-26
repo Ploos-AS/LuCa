@@ -3,5 +3,7 @@
 #include <stddef.h>
 #define LUCA_IRC_MAX_PARAMS 15
 struct luca_irc_message { char prefix[256]; char command[32]; char params[LUCA_IRC_MAX_PARAMS][512]; size_t nparams; };
+int luca_irc_casecmp(const char *a,const char *b);
+int luca_irc_prefix_is_nick(const char *prefix,const char *nick);
 int luca_irc_parse(const char *line, struct luca_irc_message *out);
 #endif

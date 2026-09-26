@@ -26,3 +26,5 @@ License: MIT.
 
 
 M1.7 adds optional native-C BotAI v1 integration. Configure `botai_url` to enable `!ai <message>`; without BotAI or libcurl LuCa remains a normal standalone IRC/Lua bot. See `docs/M1.7-BOTAI.md`.
+
+M1.8 adds bounded, memory-only caller-owned BotAI history, `!aireset`, and opt-in natural PM/nick-addressed conversation. See `docs/M1.8-BOTAI-CONTEXT.md`.

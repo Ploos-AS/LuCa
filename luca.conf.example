@@ -16,3 +16,7 @@ reconnect_seconds=5
 # botai_url=http://botai:8090
 botai_expert=auto
 botai_timeout_seconds=30
+# Optional bounded in-memory context (0 disables history; max 20)
+botai_history_messages=10
+# Opt-in natural PM / explicit nick-addressed channel conversation
+botai_conversation=false

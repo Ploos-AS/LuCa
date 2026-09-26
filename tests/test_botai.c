@@ -1,14 +1,14 @@
 #include "luca/botai.h"
 #include <assert.h>
 #include <string.h>
+#include <stdlib.h>
+#define CHECK(x) do { if(!(x)) abort(); } while(0)
 #ifdef LUCA_HAVE_CURL
 #include <arpa/inet.h>
 #include <pthread.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <stdlib.h>
-#define CHECK(x) do { if(!(x)) abort(); } while(0)
 
 struct fixture { int fd; int port; const char *response; };
 static void *serve_once(void *arg){

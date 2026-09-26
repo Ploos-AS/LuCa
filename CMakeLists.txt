@@ -28,3 +28,7 @@ add_test(NAME sasl COMMAND test_sasl)
 add_executable(test_pbmp tests/test_pbmp.c)
 target_link_libraries(test_pbmp PRIVATE luca_core)
 add_test(NAME pbmp COMMAND test_pbmp)
+
+add_executable(test_botai tests/test_botai.c)
+target_link_libraries(test_botai PRIVATE luca_core)
+add_test(NAME botai_history COMMAND test_botai)

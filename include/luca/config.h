@@ -1,5 +1,5 @@
 #ifndef LUCA_CONFIG_H
 #define LUCA_CONFIG_H
-struct luca_config { char server[256]; char port[16]; char nick[64]; char user[64]; char realname[128]; char channel[128]; char script[256]; char sasl_user[128]; char sasl_password[256]; char pbmp_socket[256]; int reconnect_seconds; int tls; int sasl; };
+struct luca_config { char server[256]; char port[16]; char nick[64]; char user[64]; char realname[128]; char channel[128]; char script[256]; char sasl_user[128]; char sasl_password[256]; char pbmp_socket[256]; char botai_url[256]; char botai_expert[64]; int botai_timeout_seconds; int reconnect_seconds; int tls; int sasl; };
 int luca_config_load(const char *path, struct luca_config *cfg);
 #endif

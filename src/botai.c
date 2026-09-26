@@ -22,10 +22,15 @@ char out[1024];if(!b||!b->available||req(b,"/v1/version",NULL,out,sizeof out))re
 (void)b;return-1;
 #endif
 }
-int luca_botai_chat(struct luca_botai*b,const char*message,char*reply,size_t reply_size){
+void luca_botai_history_init(struct luca_botai_history*h,size_t limit){if(!h)return;memset(h,0,sizeof*h);if(limit>LUCA_BOTAI_MAX_HISTORY)limit=LUCA_BOTAI_MAX_HISTORY;h->limit=limit-(limit%2);}
+void luca_botai_history_reset(struct luca_botai_history*h){if(h)h->count=0;}
+void luca_botai_history_add(struct luca_botai_history*h,const char*u,const char*a){if(!h||h->limit<2||!u||!a)return;while(h->count+2>h->limit){memmove(h->items,h->items+2,(h->count-2)*sizeof h->items[0]);h->count-=2;}snprintf(h->items[h->count].role,sizeof h->items[h->count].role,"user");snprintf(h->items[h->count++].content,sizeof h->items[0].content,"%s",u);snprintf(h->items[h->count].role,sizeof h->items[h->count].role,"assistant");snprintf(h->items[h->count++].content,sizeof h->items[0].content,"%s",a);}
+int luca_botai_chat_history(struct luca_botai*b,const struct luca_botai_history*h,const char*message,char*reply,size_t reply_size){
 #ifdef LUCA_HAVE_CURL
-if(!b||!message||!*message||!reply||reply_size<2)return-1;char em[4096],ee[256],body[4608],out[16384];esc(message,em,sizeof em);esc(b->expert,ee,sizeof ee);snprintf(body,sizeof body,"{\"expert\":\"%s\",\"message\":\"%s\"}",ee,em);if(req(b,"/v1/chat",body,out,sizeof out))return-1;char*p=strstr(out,"\"text\":");if(!p)return-1;p=strchr(p,':');if(!p)return-1;p++;while(*p==' ')*p++;if(*p++!='"')return-1;size_t j=0;while(*p&&*p!='"'&&j+1<reply_size){if(*p=='\\'&&p[1]){p++;if(*p=='n')reply[j++]=' ';else reply[j++]=*p++;}else reply[j++]=*p++;}reply[j]=0;return j?0:-1;
+if(!b||!message||!*message||!reply||reply_size<2)return-1;char em[4096],ee[256],body[16384],out[16384],hist[11000];esc(message,em,sizeof em);esc(b->expert,ee,sizeof ee);size_t hn=0;hist[hn++]='[';if(h){for(size_t i=0;i<h->count&&i<LUCA_BOTAI_MAX_HISTORY;i++){char ec[2100];esc(h->items[i].content,ec,sizeof ec);int z=snprintf(hist+hn,sizeof(hist)-hn,"%s{\"role\":\"%s\",\"content\":\"%s\"}",i?",":"",h->items[i].role,ec);if(z<0||(size_t)z>=sizeof(hist)-hn)return-1;hn+=(size_t)z;}}hist[hn++]=']';hist[hn]=0;snprintf(body,sizeof body,"{\"expert\":\"%s\",\"history\":%s,\"message\":\"%s\"}",ee,hist,em);if(req(b,"/v1/chat",body,out,sizeof out))return-1;char*p=strstr(out,"\"text\":");if(!p)return-1;p=strchr(p,':');if(!p)return-1;p++;while(*p==' ')*p++;if(*p++!='"')return-1;size_t j=0;while(*p&&*p!='"'&&j+1<reply_size){if(*p=='\\'&&p[1]){p++;if(*p=='n')reply[j++]=' ';else reply[j++]=*p++;}else reply[j++]=*p++;}reply[j]=0;return j?0:-1;
 #else
-(void)b;(void)message;(void)reply;(void)reply_size;return-1;
+(void)b;(void)h;(void)message;(void)reply;(void)reply_size;return-1;
 #endif
 }
+int luca_botai_chat(struct luca_botai*b,const char*message,char*reply,size_t reply_size){return luca_botai_chat_history(b,NULL,message,reply,reply_size);}
+

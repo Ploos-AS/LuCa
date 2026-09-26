@@ -14,7 +14,11 @@ Run with `./build/luca luca.conf`. See `luca.conf.example`.
 
 ## Design
 
-The C core owns protocol, networking, security-sensitive transport and lifecycle. Lua scripts receive events and may send IRC messages through a deliberately small API. LuCa remains fully usable without BotWeb or PBMP.
+The C core owns protocol, networking, security-sensitive transport and lifecycle. Lua scripts receive events and may send IRC messages through a deliberately small API.
+
+### Standalone-first rule
+
+LuCa MUST remain a fully functional IRC bot without PBMP, BotWeb, BotAI, or any other external Ploos service. PBMP management, BotWeb integration and BotAI capabilities are optional adapters/features only. Their absence, failure, or removal MUST NOT prevent normal IRC operation or make core bot functionality depend on an external control plane or AI service.
 
 The web UI is deliberately out of process. Management interoperability is defined by the separate PBMP project.
 

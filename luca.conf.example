@@ -11,3 +11,8 @@ sasl=false
 # sasl_password=secret
 pbmp_socket=/tmp/luca.pbmp.sock
 reconnect_seconds=5
+
+# Optional BotAI; omit botai_url for standalone operation
+# botai_url=http://botai:8090
+botai_expert=auto
+botai_timeout_seconds=30

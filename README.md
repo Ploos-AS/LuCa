@@ -23,3 +23,6 @@ LuCa MUST remain a fully functional IRC bot without PBMP, BotWeb, BotAI, or any 
 The web UI is deliberately out of process. Management interoperability is defined by the separate PBMP project.
 
 License: MIT.
+
+
+M1.7 adds optional native-C BotAI v1 integration. Configure `botai_url` to enable `!ai <message>`; without BotAI or libcurl LuCa remains a normal standalone IRC/Lua bot. See `docs/M1.7-BOTAI.md`.

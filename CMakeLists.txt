@@ -36,3 +36,6 @@ add_test(NAME botai_history COMMAND test_botai)
 add_executable(test_botai_scopes tests/test_botai_scopes.c)
 target_link_libraries(test_botai_scopes PRIVATE luca_core)
 add_test(NAME botai_scopes COMMAND test_botai_scopes)
+
+add_executable(luca_pbmp_qualification tests/pbmp_qualification.c)
+target_link_libraries(luca_pbmp_qualification PRIVATE luca_core)

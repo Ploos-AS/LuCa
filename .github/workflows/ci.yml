@@ -10,3 +10,42 @@ jobs:
       - run: cmake --build build
       - run: ctest --test-dir build --output-on-failure
       - run: docker build -t luca:test .
+
+  pbmp-conformance:
+    runs-on: ubuntu-latest
+    env:
+      LUCA_PBMP_SOCKET: /tmp/luca.pbmp.sock
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y cmake pkg-config liblua5.4-dev
+      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+      - run: cmake --build build --target luca_pbmp_qualification
+      - name: Start LuCa PBMP qualification endpoint
+        run: |
+          ./build/luca_pbmp_qualification &
+          echo $! > /tmp/luca-pbmp.pid
+          for i in {1..50}; do
+            test -S "$LUCA_PBMP_SOCKET" && exit 0
+            sleep 0.1
+          done
+          exit 1
+      - name: Check out PBMP qualification suite
+        uses: actions/checkout@v4
+        with:
+          repository: Ploos-AS/PBMP
+          ref: v1.0.0
+          path: .pbmp-suite
+      - name: Qualify LuCa against PBMP/1
+        run: |
+          python3 .pbmp-suite/tools/qualify_endpoint.py \
+            --socket "$LUCA_PBMP_SOCKET" \
+            --implementation-name luca \
+            --implementation-version "$GITHUB_SHA" \
+            --output luca-pbmp-conformance.json
+          python3 -c 'import json; r=json.load(open("luca-pbmp-conformance.json")); assert r["result"] == "pass"'
+      - name: Upload PBMP conformance report
+        uses: actions/upload-artifact@v4
+        with:
+          name: luca-pbmp-v1.0.0-conformance
+          path: luca-pbmp-conformance.json
+          if-no-files-found: error
